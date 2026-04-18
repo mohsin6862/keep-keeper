@@ -1,7 +1,8 @@
 import Banner from '@/Components/Banner/Banner';
 import Display from '@/Components/Display/Display';
-import Friends from '@/Components/Friends/Friends';
+
 import React from 'react';
+import Friends from '../../Components/Friends/Friends';
 
 const HomePage = () => {
     return (

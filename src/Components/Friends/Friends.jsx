@@ -1,5 +1,6 @@
+import Friend from '@/Components/Friend/Friend';
 import React from 'react';
-import Friend from '../Friend/Friend';
+
 
 const Friends = async () => {
   const res = await fetch('http://localhost:3000/friends.json', {
@@ -8,8 +9,8 @@ const Friends = async () => {
   const friends = await res.json();
 
   return (
-    <div className='container mx-auto'>
-      <div className="w-[90%] mx-auto border-2 border-t border-base-300 my-5"></div>
+    <div className='my-20'>
+      <div className="border-2 border-t border-base-300 my-5"></div>
 
       <h1 className='text-3xl font-bold text-[#1F2937] my-20'>
         Your Friends

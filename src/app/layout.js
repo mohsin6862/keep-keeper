@@ -2,10 +2,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/Components/Shared/Navbar/Navbar";
 import Footer from "@/Components/Shared/Footer/Footer";
-import Banner from "@/Components/Banner/Banner";
-import Display from "@/Components/Display/Display";
-import Friends from "@/Components/Friends/Friends";
-import HomePage from "./home/page";
+
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,8 +27,10 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col">
       <Navbar></Navbar>
-      
+      <main className="max-w-7xl mx-auto">
+
         {children}
+      </main>
       <Footer></Footer>
         </body>
     </html>
