@@ -1,24 +1,57 @@
-import Image from 'next/image';
-import React from 'react';
-import { FaArchive, FaBell, FaPhone, FaTrash, FaVideo } from 'react-icons/fa';
-import { FaMessage } from 'react-icons/fa6';
+'use client';
 
-const FriendDetails = async ({ params }) => {
-  const { friendId } = await params;
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { toast } from "react-toastify";
+import { useInteraction } from "@/context/InteractionContext";
+import Image from "next/image";
+import Link from "next/link";
+import { FaArchive, FaBell, FaPhone, FaTrash, FaVideo } from "react-icons/fa";
+import { FaMessage } from "react-icons/fa6";
 
-  const res = await fetch('http://localhost:3000/friends.json', {
-    cache: 'no-store'
-  });
+const FriendDetails = () => {
+  const { friendId } = useParams(); // ✅ correct way
 
-  const friends = await res.json();
+  const [friendDetails, setFriendDetails] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const friendDetails = friends.find(
-    (f) => f.id === Number(friendId)
-  );
+  const { addInteraction } = useInteraction();
 
-  if (!friendDetails) {
-    return <h1>Friend not found</h1>;
+  useEffect(() => {
+    fetch("/friends.json")
+      .then((res) => res.json())
+      .then((data) => {
+        const found = data.find(
+          (f) => String(f.id) === String(friendId)
+        );
+        setFriendDetails(found);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [friendId]);
+
+  // 🔄 Loading
+  if (loading) {
+    return <div className="text-center my-20">Loading...</div>;
   }
+
+  // ❌ Not found
+  if (!friendDetails) {
+    return (
+      <div className="space-y-5 my-20 text-center">
+        <h1 className="font-semibold text-2xl">Ops!! Friend not found</h1>
+        <Link href="/">
+          <button className="btn btn-success">Go To Home</button>
+        </Link>
+      </div>
+    );
+  }
+
+  // ✅ Handle click
+  const handleAction = (type) => {
+    addInteraction(type, friendDetails);
+    toast.success(`${type} recorded for ${friendDetails.name}`);
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -53,27 +86,33 @@ const FriendDetails = async ({ params }) => {
                   : "badge-neutral"
               }`}
             >
-              {friendDetails.status}      
+              {friendDetails.status}
             </div>
-            <div className="space-x-3">
-            {friendDetails.tags?.map(tag => (
-    <span
-      key={tag}
-      className="px-3 py-1 text-xs bg-[#81c5b0] text-white rounded-full"
-    >
-      {tag}
-    </span>
-  ))}
-        </div>
 
-            <p className="text-lg italic text-gray-500"> &quot;{friendDetails.bio}&quot;</p>
+            {/* TAGS */}
+            <div className="space-x-3">
+              {friendDetails.tags?.map((tag) => (
+                <span
+                  key={tag}
+                  className="px-3 py-1 text-xs bg-[#81c5b0] text-white rounded-full"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {/* BIO */}
+            <p className="text-lg italic text-gray-500">
+              &quot;{friendDetails.bio}&quot;
+            </p>
+
+            {/* EMAIL */}
             <p className="text-sm text-gray-400">
               Email: {friendDetails.email}
             </p>
           </div>
         </div>
 
-        {/* ACTION BUTTONS */}
         <div className="space-y-3">
 
           <div className="card bg-base-100 shadow-sm">
@@ -102,6 +141,8 @@ const FriendDetails = async ({ params }) => {
 
       {/* RIGHT SIDE */}
       <div>
+
+        {/* STATS */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
 
           <div className="bg-base-100 rounded shadow-md p-6 text-center">
@@ -132,33 +173,51 @@ const FriendDetails = async ({ params }) => {
           </div>
 
         </div>
-         <div className="bg-base-100 rounded shadow-md p-6 flex justify-between my-4">
-          <div className='space-y-4'>
-              <h1 className="text-3xl font-semibold text-[#1F2937]">
+
+        <div className="bg-base-100 rounded shadow-md p-6 flex justify-between my-4">
+          <div className="space-y-4">
+            <h1 className="text-3xl font-semibold text-[#1F2937]">
               Relationship Goal
             </h1>
             <p className="text-gray-500 font-medium">
               Connect every {friendDetails.goal} (Days)
             </p>
           </div>
-          <button className='btn'>Edit</button>
-          </div>
-          <div className="bg-base-100 rounded shadow-md p-6 flex justify-between ">
-            <div>
-                <h1 className="text-xl font-semibold text-[#1F2937]">
-              Quick Check-In
-            </h1>
-            <div className='grid grid-cols-1 lg:grid-cols-3 gap-4 my-4'>
-              <button className='btn flex flex-col items-center h-auto py-4 px-8 text-xl'><FaPhone></FaPhone> call</button>
-              <button className='btn flex flex-col items-center h-auto py-4 px-8 text-xl'><FaMessage></FaMessage> Text</button>
-              <button className='btn flex flex-col items-center h-auto py-4 px-8 text-xl'><FaVideo></FaVideo> Video</button>
-            </div>
-            </div>
+          <button className="btn">Edit</button>
+        </div>
+
+        <div className="bg-base-100 rounded shadow-md p-6">
+          <h1 className="text-xl font-semibold text-[#1F2937]">
+            Quick Check-In
+          </h1>
+
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 my-4">
+
+            <button
+              onClick={() => handleAction("Call")}
+              className="btn flex flex-col items-center h-auto py-4 px-8 text-xl"
+            >
+              <FaPhone /> Call
+            </button>
+
+            <button
+              onClick={() => handleAction("Text")}
+              className="btn flex flex-col items-center h-auto py-4 px-8 text-xl"
+            >
+              <FaMessage /> Text
+            </button>
+
+            <button
+              onClick={() => handleAction("Video")}
+              className="btn flex flex-col items-center h-auto py-4 px-8 text-xl"
+            >
+              <FaVideo /> Video
+            </button>
 
           </div>
+        </div>
 
       </div>
-
     </div>
   );
 };
