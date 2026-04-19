@@ -10,7 +10,7 @@ import { FaArchive, FaBell, FaPhone, FaTrash, FaVideo } from "react-icons/fa";
 import { FaMessage } from "react-icons/fa6";
 
 const FriendDetails = () => {
-  const { friendId } = useParams(); // ✅ correct way
+  const { friendId } = useParams(); 
 
   const [friendDetails, setFriendDetails] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -30,12 +30,10 @@ const FriendDetails = () => {
       .catch(() => setLoading(false));
   }, [friendId]);
 
-  // 🔄 Loading
   if (loading) {
     return <div className="text-center my-20">Loading...</div>;
   }
 
-  // ❌ Not found
   if (!friendDetails) {
     return (
       <div className="space-y-5 my-20 text-center">
@@ -47,7 +45,6 @@ const FriendDetails = () => {
     );
   }
 
-  // ✅ Handle click
   const handleAction = (type) => {
     addInteraction(type, friendDetails);
     toast.success(`${type} recorded for ${friendDetails.name}`);
