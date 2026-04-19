@@ -22,7 +22,7 @@ export const InteractionProvider = ({ children }) => {
   const addInteraction = (type, friend) => {
     const newInteraction = {
       id: Date.now(),
-      type, // call | text | video
+      type, 
       friendId: friend.id,
       name: friend.name,
       time: new Date().toLocaleString(),
