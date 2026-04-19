@@ -1,9 +1,10 @@
+
 import Friend from '@/Components/Friend/Friend';
 import React from 'react';
 
 
 const Friends = async () => {
-  const res = await fetch('http://localhost:3000/friends.json', {
+  const res = await fetch('/friends.json', {
     cache: 'no-store'
   });
   const friends = await res.json();

@@ -1,5 +1,4 @@
 'use client';
-
 import { useInteraction } from '@/context/InteractionContext';
 import {
   PieChart,
