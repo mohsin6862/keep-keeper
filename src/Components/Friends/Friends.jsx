@@ -1,21 +1,20 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import Friend from '@/Components/Friend/Friend';
+import { useEffect, useState } from "react";
+import Friend from "@/Components/Friend/Friend";
 
 const Friends = () => {
   const [friends, setFriends] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // ✅ Fetch data from public folder
   useEffect(() => {
     const fetchFriends = async () => {
       try {
-        const res = await fetch('/friends.json'); // ✔ works on Vercel
+        const res = await fetch("/friends.json"); // ✔ works on Vercel
         const data = await res.json();
         setFriends(data);
       } catch (error) {
-        console.error('Failed to load friends:', error);
+        console.error("Failed to load friends:", error);
       } finally {
         setLoading(false);
       }
@@ -24,7 +23,6 @@ const Friends = () => {
     fetchFriends();
   }, []);
 
-  // ✅ Loading UI
   if (loading) {
     return (
       <div className="flex justify-center items-center my-20">
@@ -33,7 +31,6 @@ const Friends = () => {
     );
   }
 
-  // ✅ Empty state
   if (friends.length === 0) {
     return (
       <div className="text-center my-20">
@@ -44,7 +41,6 @@ const Friends = () => {
 
   return (
     <div className="my-20 px-4">
-
       <div className="border-t border-base-300 my-5"></div>
 
       <h1 className="text-3xl font-bold text-[#1F2937] my-10 text-center">
@@ -56,7 +52,6 @@ const Friends = () => {
           <Friend key={friend.id} friend={friend} />
         ))}
       </div>
-
     </div>
   );
 };

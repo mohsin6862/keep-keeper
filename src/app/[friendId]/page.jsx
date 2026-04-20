@@ -111,21 +111,21 @@ const FriendDetails = () => {
 
         <div className="space-y-3">
 
-          <div className="card bg-base-100 shadow-sm">
+          <div className="btn card bg-base-100 shadow-sm p-8">
             <div className="card-body flex-row items-center gap-4">
               <FaBell />
               <span className="font-semibold">Snooze 2 weeks</span>
             </div>
           </div>
 
-          <div className="card bg-base-100 shadow-sm">
+          <div className="btn p-8 card bg-base-100 shadow-sm">
             <div className="card-body flex-row items-center gap-4">
               <FaArchive />
               <span className="font-semibold">Archive</span>
             </div>
           </div>
 
-          <div className="card bg-base-100 shadow-sm">
+          <div className="card bg-base-100 shadow-sm btn p-8">
             <div className="card-body flex-row items-center gap-4 text-red-600">
               <FaTrash />
               <span className="font-semibold">Delete</span>
